@@ -15,16 +15,14 @@ const ENV_TO_SETTINGS_MAP = {
 
 // Helper function to construct server URL without default ports
 function constructServerUrl(protocol, host, port) {
-    const isHttps = protocol.toLowerCase() === 'https';
-    const isHttp = protocol.toLowerCase() === 'http';
+    const p = protocol.toLowerCase();
+    const defaultPort = p === 'https' ? 443 : p === 'http' ? 80 : null;
 
-    // Don't append port if it's the default port for the protocol
-    if ((isHttps && port === 443) || (isHttp && port === 80)) {
-        return `${protocol}://${host}`.toLowerCase();
-    }
-
-    return `${protocol}://${host}:${port}`.toLowerCase();
+    return port === defaultPort
+        ? `${p}://${host}`
+        : `${p}://${host}:${port}`;
 }
+
 
 // Create settings from environment variables and/or defaults
 async function createSettingsFromEnvironment() {
